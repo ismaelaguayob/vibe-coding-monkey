@@ -1,5 +1,6 @@
 document.getElementById('dar-banana').addEventListener('click', function() {
   if (animacionEspecialActiva) return; // Evita interacción durante la animación especial
+  reproducirSonido('banana.mp3'); // <--- AÑADIDO: Sonido de banana
   const animacion = document.getElementById('animacion');
   let globo = document.getElementById('globo-mensaje');
   if (!globo) {
@@ -51,6 +52,7 @@ document.getElementById('dar-banana').addEventListener('click', function() {
     globo.style.display = 'block';
     if (mensajes[idx] === 'Mal banano') {
       animacionEspecialActiva = true;
+      reproducirSonido('caca.mp3'); // <--- AÑADIDO: Sonido de caca
       setTimeout(() => {
         const feca3d = document.createElement('img');
         feca3d.className = 'feca feca-3d animar-3d';
@@ -115,6 +117,7 @@ document.getElementById('dar-banana').addEventListener('click', function() {
       botonMoneda.onclick = function() {
         if (animacionEspecialActiva) return;
         animacionEspecialActiva = true;
+        reproducirSonido('sonido-moneda.mp3'); // <--- AÑADIDO: Sonido de moneda
         botonMoneda._monedaLanzada = true;
         // Animación de lanzar moneda (igual que banana)
         const moneda = document.createElement('img');
@@ -220,3 +223,26 @@ function mostrarSocialCredit(src, opciones = {}) {
     actualizarSocialCredits(opciones.delta);
   }
 }
+
+// Función para reproducir sonidos
+function reproducirSonido(src) {
+  const audio = new Audio(src);
+  audio.play();
+}
+
+// Música de fondo
+window.addEventListener('load', () => {
+  const musicaFondo = document.createElement('audio');
+  musicaFondo.src = 'musica-fondo.mp3';
+  musicaFondo.loop = true;
+  musicaFondo.autoplay = true;
+  musicaFondo.volume = 0.5; // Ajusta el volumen si es necesario
+  document.body.appendChild(musicaFondo);
+
+  // Intento de reproducir después de interacción del usuario si autoplay está bloqueado
+  document.body.addEventListener('click', () => {
+    if (musicaFondo.paused) {
+      musicaFondo.play().catch(e => console.error("Error al reproducir música de fondo:", e));
+    }
+  }, { once: true });
+});
